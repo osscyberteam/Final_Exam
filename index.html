@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <!-- Favicon ক্যাশ বাস্টিং ট্রিক সহ -->
     <link rel="icon" type="image/png" href="favicon.png?v=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,7 +26,7 @@
             transition: filter 0.2s ease;
         }
         
-        /* পেজ থেকে ফোকাস চলে গেলে (স্ক্রিনশট বা অন্য অ্যাপে যাওয়ার চেষ্টা করলে) ঝাপসা হয়ে যাবে */
+        /* পেজ থেকে ফোকাস চলে গেলে ঝাপসা হয়ে যাবে */
         body.blurred {
             filter: blur(10px);
         }
@@ -76,14 +75,48 @@
         .options-group { margin: 8px 0; }
         .success-box { text-align: center; padding: 40px 20px; }
         .success-box h2 { color: #28a745; font-size: 28px; }
+
+        /* টেবিল ডিজাইনের সিএসএস */
+        .marks-table-container {
+            margin: 30px 0 20px 0;
+            overflow-x: auto;
+        }
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .marks-table th, .marks-table td {
+            border: 1px solid #ddd;
+            padding: 12px 10px;
+            text-align: center;
+        }
+        .marks-table th {
+            background-color: #1a73e8;
+            color: white;
+            font-weight: bold;
+        }
+        .marks-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .table-footer-note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ffeeba;
+            margin-top: 5px;
+            font-size: 15px;
+        }
     </style>
 </head>
-<!-- রাইট ক্লিক, ড্র্যাগ, কপি, কাট সম্পূর্ণ এইচটিএমএল লেভেলে ব্লক -->
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" oncopy="return false;" oncut="return false;">
 
 <div class="container">
     
-    <!-- ধাপ ১: লগইন সেকশন -->
     <div id="login-section">
         <h2>পরীক্ষার্থী লগইন</h2>
         <div class="input-group">
@@ -97,9 +130,9 @@
         <button class="btn" onclick="startExam()">Submit & Start Exam</button>
     </div>
 
-    <!-- ধাপ ২: মূল পরীক্ষা সেকশন -->
     <div id="quiz-section">
         <h2> চূড়ান্ত মূল্যায়ন পরীক্ষা</h2>
+        <h3> Exam Year: 2027 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Exam ID: 102027 </h3>
         <h4 style="text-align:center; color:#555;">
             Reg: <span id="display_reg" style="color:#1a73e8"></span> | 
             Roll: <span id="display_roll" style="color:#1a73e8"></span>
@@ -110,14 +143,55 @@
             <input type="hidden" name="Registration" id="form_reg">
             <input type="hidden" name="Roll" id="form_roll">
 
-            <!-- আলাদা ফাইল থেকে প্রশ্নগুলো এসে এখানে অটোমেটিক বসবে -->
-            <div id="questions-container">Loding questions...</div>
+            <div id="questions-container">Loading questions...</div>
+
+            <div class="marks-table-container">
+                <h3 style="text-align: left; color: #333; margin-bottom: 12px; font-size: 18px;">📊 নম্বর বণ্টন ও পাস মার্কস তালিকা:</h3>
+                <table class="marks-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Full Marks</th>
+                            <th>Pass Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>MCQ</b></td>
+                            <td>২০</td>
+                            <td>৮</td>
+                        </tr>
+                        <tr>
+                            <td><b>Short Question</b></td>
+                            <td>১০</td>
+                            <td>৫</td>
+                        </tr>
+                        <tr>
+                            <td><b>Practical</b></td>
+                            <td>২০</td>
+                            <td>১৮</td>
+                        </tr>
+                        <tr>
+                            <td><b>Attendance</b></td>
+                            <td>২০</td>
+                            <td>১২</td>
+                        </tr>
+                        <tr>
+                            <td><b>Homework</b></td>
+                            <td>৩০</td>
+                            <td>২২</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-footer-note">
+                    মোট পাস মার্ক ৬৫ (আলাদা আলাদা পাস করতে হবে)
+                </div>
+            </div>
 
             <button type="submit" id="submitBtn" class="btn" style="background-color: #28a745; margin-top: 20px;">Submit All Answers</button>
         </form>
     </div>
 
-    <!-- াপ ৩: সফলতার মেসেজ পেজ -->
     <div id="success-message" class="success-box">
         <h2>আপনার এক্সাম পেপার সাবমিট সফল হয়েছে।</h2>
         <p style="color: #666; font-size: 16px; margin-top: 10px;">আপনার উত্তর আমাদের ডাটাবেজে সফলভাবে সংরক্ষণ করা হয়েছে। ধন্যবাদ!</p>
@@ -125,7 +199,6 @@
 </div>
 
 <script>
-    // আপনার Apps Script-এর লিংক
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4NlqfhCETRv55ct_WLlaBgsIKVLiDzVgdRuxaBvxxIeteOuuJpaLTbdwj_VL7THCF-g/exec';
 
     function startExam() {
@@ -147,7 +220,8 @@
         fetch('questions.json')
         .then(response => response.json())
         .then(data => {
-            let html = '<h3>--- MCQ পার্ট ---</h3>';
+            let html = `<h3>--- MCQ পার্ট ---</h3> <br>
+                        <h4> পূর্ণমানঃ ২০       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
             
             data.mcqs.forEach((item, index) => {
                 html += `
@@ -160,7 +234,8 @@
                 </div>`;
             });
 
-            html += '<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3>';
+            html += `<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3> <br>
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      নেগেটিভ মার্ক নেই। </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
@@ -181,7 +256,6 @@
         });
     }
 
-    // ব্যাকগ্রাউন্ড সাবমিশন লজিক
     document.getElementById('examForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -213,26 +287,21 @@
         });
     });
 
-    // অ্যাডভান্সড সিকিউরিটি স্ক্রিপ্ট (মোবাইল ও পিসির জন্য)
     document.addEventListener('keydown', function(e) {
-        // কপি, পেস্ট, কাট, প্রিন্ট স্ক্রিন এবং সোর্স কোড দেখা ব্লক
         if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 's' || e.key === 'u' || e.key === 'p')) {
             e.preventDefault();
             alert("নিরাপত্তার স্বার্থে এই পেজে শর্টকাট ব্যবহার করা সম্পূর্ণ নিষেধ!");
         }
-        // পিসির স্ক্রিনশট কি (Print Screen) এবং F12 ব্লক
         if (e.key === 'PrintScreen' || e.key === 'F12') {
             e.preventDefault();
         }
     });
 
-    // ইনপুট বা টেক্সটবক্সে পেস্ট করা ব্লক
     document.addEventListener('paste', function(e) {
         e.preventDefault();
         alert("আপনি কোনো লেখা এখানে পেস্ট করতে পারবেন না!");
     });
 
-    // মোবাইলে স্ক্রিনশট নেওয়ার চেষ্টা করলে বা ব্যাকগ্রাউন্ডে গেলে পেজ ব্লার (ঝাপসা) করার স্ক্রিপ্ট
     window.addEventListener('blur', function() {
         document.body.classList.add('blurred');
     });
