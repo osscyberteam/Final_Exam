@@ -233,7 +233,7 @@
         .then(data => {
             // Jekyll কনফ্লিক্ট এড়াতে ফরম্যাট মডিফাই করা হয়েছে 
             let html = `<h3>MCQ Part</h3> <br>
-                        <h4> পূর্ণমানঃ ২০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
+                        <h4> পূর্ণমানঃ ২০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে।) </h4>`;
             
             data.mcqs.forEach((item, index) => {
                 html += `
@@ -247,7 +247,7 @@
             });
 
             html += `<h3>Short Question Part</h3> <br>
-                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  নেগেティブ মার্ক নেই। </h4>`;
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (নেগেটিভ মার্ক নেই।) </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
