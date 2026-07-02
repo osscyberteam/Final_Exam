@@ -14,21 +14,30 @@
             padding: 10px;
             
             /* সমস্ত ব্রাউজারে টেক্সট সিলেকশন সম্পূর্ণ বন্ধ */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
             
-            /* মোবাইলে লং প্রেস বা টাচ হাইলাইট বন্ধ */
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            /* মোবাইলে লং প্রেস বা টাচ হাইলাইট সম্পূর্ণ বন্ধ */
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
             
-            transition: filter 0.2s ease;
+            /* ব্লার ইফেক্ট অত্যন্ত দ্রুত (0.01s) হওয়ার জন্য */
+            transition: filter 0.01s ease, background-color 0.01s ease, opacity 0.01s ease;
         }
         
-        /* পেজ থেকে ফোকাস চলে গেলে ঝাপসা হয়ে যাবে */
+        /* ৩-আঙুল বা বাটন স্ক্রিনশট অ্যাক্টিভেট হলেই পুরো স্ক্রিন কালো ও সম্পূর্ণ অদৃশ্য করার ট্রিক */
         body.blurred {
-            filter: blur(10px);
+            filter: blur(50px) !important;
+            background-color: #000000 !important;
+            opacity: 0 !important; /* কন্টেন্ট ১০০% গায়েব করে দেবে */
+            pointer-events: none !important;
+        }
+
+        /* প্রিন্ট বা পিডিএফ সেভ করার চেষ্টা করলে কন্টেন্ট লক */
+        @media print {
+            body { display: none !important; }
         }
 
         .container {
@@ -49,6 +58,8 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
+            -webkit-user-select: none;
+            user-select: none;
         }
         .btn {
             background-color: #1a73e8;
@@ -76,7 +87,7 @@
         .success-box { text-align: center; padding: 40px 20px; }
         .success-box h2 { color: #28a745; font-size: 28px; }
 
-        /* টেবিল ডিজাইনের সিএসএস */
+        /* টেবিল ডিজাইন */
         .marks-table-container {
             margin: 30px 0 20px 0;
             overflow-x: auto;
@@ -113,7 +124,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
 <div class="container">
     
@@ -121,11 +132,11 @@
         <h2>পরীক্ষার্থী লগইন</h2>
         <div class="input-group">
             <label for="reg_no">Registration Number:</label>
-            <input type="text" id="reg_no" placeholder="আপনার রেজিষ্ট্রেশন নম্বর টাইপ করুন" required>
+            <input type="text" id="reg_no" placeholder="আপনার রেজিষ্ট্রেশন নম্বর টাইপ করুন" required autocomplete="off">
         </div>
         <div class="input-group">
             <label for="roll_no">Roll Number:</label>
-            <input type="text" id="roll_no" placeholder="আপনার রোল নম্বর টাইপ করুন" required>
+            <input type="text" id="roll_no" placeholder="আপনার রোল নম্বর টাইপ করুন" required autocomplete="off">
         </div>
         <button class="btn" onclick="startExam()">Submit & Start Exam</button>
     </div>
@@ -235,13 +246,13 @@
             });
 
             html += `<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3> <br>
-                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    নেগেティブ মার্ক নেই। </h4>`;
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   নেগেティブ মার্ক নেই। </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
                 <div class="question-block">
                     <label><b>${index + 1}. ${item.question}</b></label>
-                    <textarea name="ShortQ${item.id}" rows="3" placeholder="এখানে উত্তর টাইপ করে লিখুন..." required></textarea>
+                    <textarea name="ShortQ${item.id}" rows="3" placeholder="এখানে উত্তর টাইপ করে লিখুন..." required onpaste="return false;" ondrop="return false;" oncopy="return false;" oncut="return false;"></textarea>
                 </div>`;
             });
 
@@ -258,7 +269,6 @@
 
     document.getElementById('examForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.innerText = "Sending Answers... Please Wait...";
         submitBtn.disabled = true;
@@ -287,31 +297,64 @@
         });
     });
 
-    // গ্লোবাল সিকিউরিটি ইভেন্ট লিসেনারস
+    // কপি-পেস্ট-ড্র্যাগ ১০০% লক
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('selectstart', e => e.preventDefault());
     document.addEventListener('dragstart', e => e.preventDefault());
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('cut', e => e.preventDefault());
+    document.addEventListener('paste', e => e.preventDefault());
 
+    // ৩-আঙুলের টাচ জেস্টার (3-finger gesture) সনাক্ত করার চেষ্টা
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length >= 3) {
+            // যদি ৩ বা তার বেশি আঙুল স্ক্রিনে একসাথে টাচ করে, সাথে সাথে পেজ ব্ল্যাকআউট হবে
+            document.body.classList.add('blurred');
+            e.preventDefault(); 
+        }
+    }, {passive: false});
+
+    document.addEventListener('touchmove', function(e) {
+        if (e.touches.length >= 3) {
+            document.body.classList.add('blurred');
+            e.preventDefault();
+        }
+    }, {passive: false});
+
+    // পিসি ও ম্যাক এর সব শর্টকাট ব্লকার
     document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 's' || e.key === 'u' || e.key === 'p')) {
+        if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 's', 'u', 'p', 'r', 'a'].includes(e.key.toLowerCase())) {
             e.preventDefault();
-            alert("নিরাপত্তার স্বার্থে এই পেজে শর্টকাট ব্যবহার করা সম্পূর্ণ নিষেধ!");
+            alert("সিকিউরিটির কারণে এই শর্টকাট ব্যবহার নিষিদ্ধ!");
         }
-        if (e.key === 'PrintScreen' || e.key === 'F12') {
+        if ((e.metaKey || e.ctrlKey) && e.shiftKey && ['s', '4', '3'].includes(e.key.toLowerCase())) {
+            document.body.classList.add('blurred');
             e.preventDefault();
+        }
+        if (e.key === 'PrintScreen' || e.key === 'F12' || e.keyCode === 44) {
+            e.preventDefault();
+            document.body.classList.add('blurred');
         }
     });
 
-    document.addEventListener('paste', function(e) {
-        e.preventDefault();
-        alert("আপনি কোনো লেখা এখানে পেস্ট করতে পারবেন না!");
-    });
-
+    // পাওয়ার + ভলিউম বাটন চাপলে বা কোনো নোটিফিকেশন প্যানেল স্ক্রিনে এলে ব্রাউজার ফোকাস হারায়।
+    // নিচে সেই 'blur' ইভেন্টটি অত্যন্ত ফাস্ট কাজ করার জন্য সেট করা হলো।
     window.addEventListener('blur', function() {
         document.body.classList.add('blurred');
     });
+    
     window.addEventListener('focus', function() {
+        // ব্যবহারকারী নরমাল অবস্থায় ফিরলে আবার কন্টেন্ট দেখতে পারবে
         document.body.classList.remove('blurred');
+    });
+
+    // ট্যাব চেইঞ্জ ট্র্যাকিং
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.body.classList.add('blurred');
+        } else {
+            document.body.classList.remove('blurred');
+        }
     });
 </script>
 
