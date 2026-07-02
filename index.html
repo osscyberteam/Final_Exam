@@ -23,7 +23,7 @@
             -webkit-touch-callout: none !important;
             -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
             
-            /* ব্লার ইফেক্ট অত্যন্ত দ্রুত (0.01s) হওয়ার জন্য */
+            /* ব্লার ইফেক্ট অত্যন্ত দ্রুত (0.01s) হওয়ার জন্য */
             transition: filter 0.01s ease, background-color 0.01s ease, opacity 0.01s ease;
         }
         
@@ -31,7 +31,7 @@
         body.blurred {
             filter: blur(50px) !important;
             background-color: #000000 !important;
-            opacity: 0 !important; /* কন্টেন্ট ১০০% গায়েব করে দেবে */
+            opacity: 0 !important; /* কন্টেন্ট ১০০% গায়েব করে দেবে */
             pointer-events: none !important;
         }
 
@@ -231,8 +231,9 @@
         fetch('questions.json')
         .then(response => response.json())
         .then(data => {
-            let html = `<h3>--- MCQ পার্ট ---</h3> <br>
-                        <h4> পূর্ণমানঃ ২০       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
+            // Jekyll কনফ্লিক্ট এড়াতে ফরম্যাট মডিফাই করা হয়েছে 
+            let html = `<h3>MCQ Part</h3> <br>
+                        <h4> পূর্ণমানঃ ২০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
             
             data.mcqs.forEach((item, index) => {
                 html += `
@@ -245,8 +246,8 @@
                 </div>`;
             });
 
-            html += `<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3> <br>
-                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   নেগেティブ মার্ক নেই। </h4>`;
+            html += `<h3>Short Question Part</h3> <br>
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  নেগেティブ মার্ক নেই। </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
@@ -308,7 +309,6 @@
     // ৩-আঙুলের টাচ জেস্টার (3-finger gesture) সনাক্ত করার চেষ্টা
     document.addEventListener('touchstart', function(e) {
         if (e.touches.length >= 3) {
-            // যদি ৩ বা তার বেশি আঙুল স্ক্রিনে একসাথে টাচ করে, সাথে সাথে পেজ ব্ল্যাকআউট হবে
             document.body.classList.add('blurred');
             e.preventDefault(); 
         }
@@ -337,14 +337,12 @@
         }
     });
 
-    // পাওয়ার + ভলিউম বাটন চাপলে বা কোনো নোটিফিকেশন প্যানেল স্ক্রিনে এলে ব্রাউজার ফোকাস হারায়।
-    // নিচে সেই 'blur' ইভেন্টটি অত্যন্ত ফাস্ট কাজ করার জন্য সেট করা হলো।
+    // পাওয়ার + ভলিউম বাটন চাপলে বা কোনো নোটিফিকেশন প্যানেল স্ক্রিনে এলে ব্রাউজার ফোকাস হারায়।
     window.addEventListener('blur', function() {
         document.body.classList.add('blurred');
     });
     
     window.addEventListener('focus', function() {
-        // ব্যবহারকারী নরমাল অবস্থায় ফিরলে আবার কন্টেন্ট দেখতে পারবে
         document.body.classList.remove('blurred');
     });
 
