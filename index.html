@@ -27,7 +27,7 @@
             transition: filter 0.01s ease, background-color 0.01s ease, opacity 0.01s ease;
         }
         
-        /* ৩-আঙুল বা বাটন স্ক্রিনশট অ্যাক্টিভেট হলেই পুরো স্ক্রিন কালো ও সম্পূর্ণ অদৃশ্য করার ট্রিক */
+        /* ৩-আঙুল বা বাটন স্ক্রিনশট্যাক্টিভেট হলেই পুরো স্ক্রিন কালো ও সম্পূর্ণ অদৃশ্য করার ট্রিক */
         body.blurred {
             filter: blur(50px) !important;
             background-color: #000000 !important;
@@ -231,7 +231,7 @@
         fetch('questions.json')
         .then(response => response.json())
         .then(data => {
-            // Jekyll কনফ্লিক্ট এড়াতে ফরম্যাট মডিফাই করা হয়েছে 
+            // MCQ-তে required অ্যাট্রিবিউট বাদ দেওয়া হয়েছে যাতে সিলেক্ট না করলেও সাবমিট করা যায়
             let html = `<h3>MCQ Part</h3> <br>
                         <h4> পূর্ণমানঃ ২০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে।) </h4>`;
             
@@ -239,15 +239,16 @@
                 html += `
                 <div class="question-block">
                     <p><b>${index + 1}. ${item.question}</b></p>
-                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="A" id="m${item.id}a" required><label for="m${item.id}a">${item.options.A}</label></div>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="A" id="m${item.id}a"><label for="m${item.id}a">${item.options.A}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="B" id="m${item.id}b"><label for="m${item.id}b">${item.options.B}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="C" id="m${item.id}c"><label for="m${item.id}c">${item.options.C}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="D" id="m${item.id}d"><label for="m${item.id}d">${item.options.D}</label></div>
                 </div>`;
             });
 
+            // Short Questions-এ required রাখা হয়েছে যাতে সবগুলোর উত্তর দিতেই হয়
             html += `<h3>Short Question Part</h3> <br>
-                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (নেগেটিভ মার্ক নেই।) </h4>`;
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (নেগেটিভ মার্ক নেই।) </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
@@ -337,7 +338,7 @@
         }
     });
 
-    // পাওয়ার + ভলিউম বাটন চাপলে বা কোনো নোটিফিকেশন প্যানেল স্ক্রিনে এলে ব্রাউজার ফোকাস হারায়।
+    // পাওয়ার + ভলিউম বাটন চাপলে ব্রাউজার ফোকাস হারায়
     window.addEventListener('blur', function() {
         document.body.classList.add('blurred');
     });
