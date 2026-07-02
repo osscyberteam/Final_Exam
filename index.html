@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+
+<link rel="icon" type="image/png" href="favicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অনলাইন প্রফেশনাল পরীক্ষা সিস্টেম</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 10px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h2, h3 { text-align: center; color: #1a73e8; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .btn {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background-color: #1557b0; }
+        #quiz-section, #success-message { display: none; }
+        .question-block {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #1a73e8;
+            margin-bottom: 20px;
+            border-radius: 0 6px 6px 0;
+        }
+        .options-group label { font-weight: normal; display: inline-block; margin-left: 8px; cursor: pointer; }
+        .options-group { margin: 8px 0; }
+        .success-box { text-align: center; padding: 40px 20px; }
+        .success-box h2 { color: #28a745; font-size: 28px; }
+    </style>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+
+<div class="container">
+    
+    <!-- ধাপ ১: লগইন সেকশন -->
+    <div id="login-section">
+        <h2>পরীক্ষার্থী লগইন</h2>
+        <div class="input-group">
+            <label for="reg_no">Registration Number:</label>
+            <input type="text" id="reg_no" placeholder="আপনার রেজিষ্ট্রেশন নম্বর টাইপ করুন" required>
+        </div>
+        <div class="input-group">
+            <label for="roll_no">Roll Number:</label>
+            <input type="text" id="roll_no" placeholder="আপনার রোল নম্বর টাইপ করুন" required>
+        </div>
+        <button class="btn" onclick="startExam()">Submit & Start Exam</button>
+    </div>
+
+    <!-- াপ ২: মূল পরীক্ষা সেকশন -->
+    <div id="quiz-section">
+        <h2>অনলাইন মূল্যায়ন পরীক্ষা</h2>
+        <h4 style="text-align:center; color:#555;">
+            Reg: <span id="display_reg" style="color:#1a73e8"></span> | 
+            Roll: <span id="display_roll" style="color:#1a73e8"></span>
+        </h4>
+        <hr>
+        
+        <form id="examForm">
+            <input type="hidden" name="Registration" id="form_reg">
+            <input type="hidden" name="Roll" id="form_roll">
+
+            <!-- আলাদা ফাইল থেকে প্রশ্নগুলো এসে এখানে অটোমেটিক বসবে -->
+            <div id="questions-container">Loding questions...</div>
+
+            <button type="submit" id="submitBtn" class="btn" style="background-color: #28a745; margin-top: 20px;">Submit All Answers</button>
+        </form>
+    </div>
+
+    <!-- ধাপ ৩: সফলতার মেসেজ পেজ -->
+    <div id="success-message" class="success-box">
+        <h2>apnr exam suppmet sofol hoica</h2>
+        <p style="color: #666; font-size: 16px; margin-top: 10px;">আপনার উত্তর আমাদের ডাটাবেজে সফলভাবে সংরক্ষণ করা হয়েছে। ধন্যবাদ!</p>
+    </div>
+</div>
+
+<script>
+    // আপনার Apps Script-এর লিংকটি নিচে বসিয়ে দিন
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4NlqfhCETRv55ct_WLlaBgsIKVLiDzVgdRuxaBvxxIeteOuuJpaLTbdwj_VL7THCF-g/exec';
+
+    function startExam() {
+        var reg = document.getElementById('reg_no').value.trim();
+        var roll = document.getElementById('roll_no').value.trim();
+        if(reg === "" || roll === "") {
+            alert("অনুগ্রহ করে রেজিষ্ট্রেশন এবং রোল নম্বর দুটোই সঠিকভাবে টাইপ করুন।");
+            return;
+        }
+        document.getElementById('display_reg').innerText = reg;
+        document.getElementById('display_roll').innerText = roll;
+        document.getElementById('form_reg').value = reg;
+        document.getElementById('form_roll').value = roll;
+        
+        // প্রশ্ন লোড করা শুরু করা
+        loadQuestions();
+    }
+
+    // আলাদা ফাইল (questions.json) থেকে প্রশ্ন লোড করার ফাংশন
+    function loadQuestions() {
+        fetch('questions.json')
+        .then(response => response.json())
+        .then(data => {
+            let html = '<h3>--- MCQ পার্ট ---</h3>';
+            
+            // MCQ প্রশ্ন জেনারেট করা
+            data.mcqs.forEach((item, index) => {
+                html += `
+                <div class="question-block">
+                    <p><b>${index + 1}. ${item.question}</b></p>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="A" id="m${item.id}a"><label for="m${item.id}a">${item.options.A}</label></div>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="B" id="m${item.id}b"><label for="m${item.id}b">${item.options.B}</label></div>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="C" id="m${item.id}c"><label for="m${item.id}c">${item.options.C}</label></div>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="D" id="m${item.id}d"><label for="m${item.id}d">${item.options.D}</label></div>
+                </div>`;
+            });
+
+            html += '<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3>';
+            
+            // শর্ট কোশ্চেন জেনারেট করা
+            data.shortQuestions.forEach((item, index) => {
+                html += `
+                <div class="question-block">
+                    <label><b>${index + 1}. ${item.question}</b></label>
+                    <textarea name="ShortQ${item.id}" rows="3" placeholder="এখানে উত্তর টাইপ করে লিখুন..." required></textarea>
+                </div>`;
+            });
+
+            document.getElementById('questions-container').innerHTML = html;
+            
+            // স্ক্রিন পরিবর্তন
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            window.scrollTo(0, 0);
+        })
+        .catch(err => {
+            alert("প্রশ্নপত্র লোড করতে সমস্যা হয়েছে! questions.json ফাইলটি ঠিক আছে কিনা চেক করুন।");
+        });
+    }
+
+    // ব্যাকগ্রাউন্ড সাবমিশন লজিক
+    document.getElementById('examForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerText = "Sending Answers... Please Wait...";
+        submitBtn.disabled = true;
+
+        const formData = new FormData(this);
+        const searchParams = new URLSearchParams();
+
+        for (const pair of formData.entries()) {
+            searchParams.append(pair[0], pair[1]);
+        }
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: searchParams,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(response => {
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            window.scrollTo(0, 0);
+        })
+        .catch(error => {
+            alert("Error: Data send করতে সমস্যা হয়েছে! আবার চেষ্টা করুন।");
+            submitBtn.innerText = "Submit All Answers";
+            submitBtn.disabled = false;
+        });
+    });
+
+    // সিকিউরিটি শর্টকাট লক
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 's' || e.key === 'u')) {
+            e.preventDefault();
+            alert("নিরাপত্তার স্বার্থে এই পেজে কপি/পেস্ট করা নিষেধ!");
+        }
+        if (e.key === 'F12') { e.preventDefault(); }
+    });
+    document.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert("আপনি কোনো লেখা এখানে পেস্ট করতে পারবেন না!");
+    });
+</script>
+
+</body>
+</html>
