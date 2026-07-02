@@ -113,7 +113,7 @@
         }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" oncopy="return false;" oncut="return false;">
+<body>
 
 <div class="container">
     
@@ -221,13 +221,13 @@
         .then(response => response.json())
         .then(data => {
             let html = `<h3>--- MCQ পার্ট ---</h3> <br>
-                        <h4> পূর্ণমানঃ ২০       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
+                        <h4> পূর্ণমানঃ ২০       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ২টি MCQ ভুলের জন্য ১ মার্ক করে কাটা হবে। </h4>`;
             
             data.mcqs.forEach((item, index) => {
                 html += `
                 <div class="question-block">
                     <p><b>${index + 1}. ${item.question}</b></p>
-                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="A" id="m${item.id}a"><label for="m${item.id}a">${item.options.A}</label></div>
+                    <div class="options-group"><input type="radio" name="MCQ${item.id}" value="A" id="m${item.id}a" required><label for="m${item.id}a">${item.options.A}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="B" id="m${item.id}b"><label for="m${item.id}b">${item.options.B}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="C" id="m${item.id}c"><label for="m${item.id}c">${item.options.C}</label></div>
                     <div class="options-group"><input type="radio" name="MCQ${item.id}" value="D" id="m${item.id}d"><label for="m${item.id}d">${item.options.D}</label></div>
@@ -235,7 +235,7 @@
             });
 
             html += `<h3>--- সংক্ষিপ্ত প্রশ্ন পার্ট ---</h3> <br>
-                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      নেগেটিভ মার্ক নেই। </h4>`;
+                    <h4> পূর্ণমানঃ ১০ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    নেগেティブ মার্ক নেই। </h4>`;
             
             data.shortQuestions.forEach((item, index) => {
                 html += `
@@ -286,6 +286,11 @@
             submitBtn.disabled = false;
         });
     });
+
+    // গ্লোবাল সিকিউরিটি ইভেন্ট লিসেনারস
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('dragstart', e => e.preventDefault());
 
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 's' || e.key === 'u' || e.key === 'p')) {
